@@ -8,7 +8,7 @@ configure_requires:
   ExtUtils::Install: 1.52
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.88'
+generated_by: 'Module::Install version 0.89'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -22,11 +22,11 @@ no_index:
 provides:
   App::Smoke::In::A::Box:
     file: lib/App/Smoke/In/A/Box.pm
-    version: 0.01_03
+    version: 0.02
 requires:
   perl: 5.6.0
 resources:
   homepage: http://github.com/bingos/smoke-in-a-box/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/bingos/smoke-in-a-box.git
-version: 0.01_03
+version: 0.02

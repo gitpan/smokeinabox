@@ -124,3 +124,4 @@ README
 t/00_compile.t
 t/99_pod.t
 t/99_pod_coverage.t
+tools/strip-pod.pl
