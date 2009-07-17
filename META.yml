@@ -22,11 +22,11 @@ no_index:
 provides:
   App::Smoke::In::A::Box:
     file: lib/App/Smoke/In/A/Box.pm
-    version: 0.12
+    version: 0.14
 requires:
   perl: 5.6.0
 resources:
   homepage: http://github.com/bingos/smoke-in-a-box/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/bingos/smoke-in-a-box.git
-version: 0.12
+version: 0.14
