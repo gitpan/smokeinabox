@@ -14,12 +14,13 @@ use version;
 use constant ON_VMS  => $^O eq 'VMS';
 
 BEGIN {
-    use vars        qw[ $VERSION @ISA $VERBOSE $CACHE @EXPORT_OK 
+    use vars        qw[ $VERSION @ISA $VERBOSE $CACHE @EXPORT_OK $DEPRECATED
                         $FIND_VERSION $ERROR $CHECK_INC_HASH];
     use Exporter;
     @ISA            = qw[Exporter];
-    $VERSION        = '0.30';
+    $VERSION        = '0.34';
     $VERBOSE        = 0;
+    $DEPRECATED     = 0;
     $FIND_VERSION   = 1;
     $CHECK_INC_HASH = 0;
     @EXPORT_OK      = qw[check_install can_load requires];
@@ -93,7 +94,7 @@ sub check_install {
                     ($fh) = $dir->[0]->($dir, $file, @{$dir}{1..$#{$dir}})
     
                 } elsif (UNIVERSAL::can($dir, 'INC')) {
-                    ($fh) = $dir->INC->($dir, $file);
+                    ($fh) = $dir->INC($file);
                 }
     
                 if (!UNIVERSAL::isa($fh, 'GLOB')) {
@@ -183,6 +184,16 @@ sub check_install {
             version->new( $args->{version} ) <= version->new( $href->{version} )
                 ? 1 
                 : 0;
+    }
+
+    if ( $DEPRECATED and version->new($]) >= version->new('5.011') ) {
+        require Module::CoreList;
+        require Config;
+
+        $href->{uptodate} = 0 if 
+           exists $Module::CoreList::version{ 0+$] }{ $args->{module} } and
+           Module::CoreList::is_deprecated( $args->{module} ) and
+           $Config::Config{privlibexp} eq $href->{dir};
     }
 
     return $href;

@@ -31,7 +31,7 @@ use vars qw[$DEBUG $error $VERSION $WARN $FOLLOW_SYMLINK $CHOWN $CHMOD
 $DEBUG                  = 0;
 $WARN                   = 1;
 $FOLLOW_SYMLINK         = 0;
-$VERSION                = "1.52";
+$VERSION                = "1.54";
 $CHOWN                  = 1;
 $CHMOD                  = 1;
 $SAME_PERMISSIONS       = $> == 0 ? 1 : 0;
@@ -72,7 +72,7 @@ sub new {
 
     ### copying $tmpl here since a shallow copy makes it use the
     ### same aref, causing for files to remain in memory always.
-    my $obj = bless { _data => [ ], _file => 'Unknown' }, $class;
+    my $obj = bless { _data => [ ], _file => 'Unknown', _error => '' }, $class;
 
     if (@_) {
         unless ( $obj->read( @_ ) ) {
@@ -268,7 +268,7 @@ sub _read_tar {
         }
 
         ### ignore labels:
-        ### http://www.gnu.org/manual/tar/html_node/tar_139.html
+        ### http://www.gnu.org/software/tar/manual/html_chapter/Media.html#SEC159
         next if $entry->is_label;
 
         if( length $entry->type and ($entry->is_file || $entry->is_longlink) ) {
@@ -1110,6 +1110,10 @@ sub add_data {
         my $self    = shift;
         my $msg     = $error = shift;
         $longmess   = Carp::longmess($error);
+        if (ref $self) {
+            $self->{_error} = $error;
+            $self->{_longmess} = $longmess;
+        }
 
         ### set Archive::Tar::WARN to 0 to disable printing
         ### of errors
@@ -1122,7 +1126,11 @@ sub add_data {
 
     sub error {
         my $self = shift;
-        return shift() ? $longmess : $error;
+        if (ref $self) {
+            return shift() ? $self->{_longmess} : $self->{_error};
+        } else {
+            return shift() ? $longmess : $error;
+        }
     }
 }
 
@@ -1169,7 +1177,8 @@ sub iter {
         return                  unless $handle; # handle exhausted?
 
         ### read data, should only return file
-        @data = @{ $class->_read_tar($handle, { %$opts, limit => 1 }) };
+        my $tarfile = $class->_read_tar($handle, { %$opts, limit => 1 });
+        @data = @$tarfile if ref $tarfile && ref $tarfile eq 'ARRAY';
 
         ### return one piece of data
         return shift(@data)     if @data;

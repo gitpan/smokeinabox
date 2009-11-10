@@ -5,7 +5,7 @@ use Log::Message private => 0;;
 
 BEGIN { 
     use vars qw[$VERSION]; 
-    $VERSION = 0.04; 
+    $VERSION = 0.06; 
 }
         
 

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '0.16';
+$VERSION = '0.18';
 
 'Smokebox';
 
@@ -39,8 +39,6 @@ Included are:
   CPANPLUS + its prereqs
 
   CPANPLUS::YACSmoke
-
-  YAML::Tiny
 
   Test::Reporter
 

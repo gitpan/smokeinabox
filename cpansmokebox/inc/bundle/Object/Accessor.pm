@@ -10,7 +10,7 @@ use Data::Dumper;
 ### disable string overloading for callbacks
 require overload;
 
-$VERSION    = '0.34';
+$VERSION    = '0.36';
 $FATAL      = 0;
 $DEBUG      = 0;
 
